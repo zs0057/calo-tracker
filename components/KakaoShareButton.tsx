@@ -33,9 +33,6 @@ const KakaoShareButton = ({
           title: `칼로리: ${totalCalories} kcal`,
           description: description,
           imageUrl: uploadedImageUrl || "",
-          imageWidth: 200,
-          imageHeight: 200,
-          SC: "(200,200)",
         },
       });
     }
