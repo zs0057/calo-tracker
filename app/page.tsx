@@ -1,13 +1,15 @@
 "use client";
 
-import { FormDataType } from "@/lib/apiClient";
-import { useState, ChangeEvent } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import Image from "next/image";
 import styles from "./Home.module.css";
-import { estimateCal } from "@/lib/apiClient";
+import { estimateCal, FormDataType } from "@/lib/apiClient";
 import { getMealTypeKorean, resizeImage } from "@/lib/utils";
 import KakaoShareButton from "@/components/KakaoShareButton";
 import { uploadImageToSupabase } from "@/lib/uploadImage";
+import { supabase } from "@/lib/supabaseClient"; // supabase 클라이언트를 가져옵니다.
+import { FaRedoAlt } from "react-icons/fa"; // restart 아이콘 추가
+import useStore from "@/lib/store";
 
 export default function Home() {
   const [mealType, setMealType] = useState<string>("breakfast");
@@ -21,6 +23,7 @@ export default function Home() {
     items: string;
   }>({ total_calories: 0, items: "", ai_text: "" });
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
+  const setTotalCalories = useStore((state) => state.setTotalCalories);
 
   const uploadImage = async () => {
     if (selectedImage) {
@@ -84,6 +87,17 @@ export default function Home() {
     setTextarea(e.target.value);
   };
 
+  const handleCalorieChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newCalories = parseInt(e.target.value) || 0; // 문자열을 숫자로 변환
+    console.log(newCalories);
+    setResult((prevResult) => ({
+      ...prevResult,
+      total_calories: newCalories,
+    }));
+
+    setTotalCalories(newCalories); // 숫자로 변환된 값을 전달
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
     const formData: FormDataType = {
@@ -98,6 +112,7 @@ export default function Home() {
       items: res.items,
       ai_text: res.ai_text,
     });
+    setTotalCalories(res.total_calories);
     await uploadImage();
     setSubmitted(true);
     setLoading(false);
@@ -212,7 +227,14 @@ export default function Home() {
               </div>
             )}
             <div className={styles.calorie}>
-              Calorie: {result.total_calories} kcal
+              Calorie:
+              <input
+                type="text"
+                className={styles.calorieInput}
+                value={result.total_calories}
+                onChange={handleCalorieChange}
+              />
+              kcal
             </div>
             <div className={styles.tagContainer}>
               <span className={styles.tag}>
@@ -230,7 +252,7 @@ export default function Home() {
             </div>
             <div className={styles.actionButtons}>
               <button className={styles.resetButton} onClick={handleReset}>
-                다시하기
+                <FaRedoAlt /> {/* restart 아이콘 */}
               </button>
               <KakaoShareButton
                 result={result}

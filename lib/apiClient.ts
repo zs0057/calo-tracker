@@ -7,7 +7,6 @@ export interface FormDataType {
 const apiUrl = process.env.NEXT_PUBLIC_API_URL + "/api/estimateCal";
 
 export const estimateCal = async (formData: FormDataType) => {
-  console.log(JSON.stringify(formData));
   const response = await fetch(apiUrl, {
     method: "POST",
     headers: {

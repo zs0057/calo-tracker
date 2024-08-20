@@ -54,16 +54,24 @@ export const resizeImage64 = (
       let width = img.width;
       let height = img.height;
 
-      if (width > height) {
-        if (width > maxWidth) {
-          height *= maxWidth / width;
-          width = maxWidth;
-        }
+      // 가로 4, 세로 3 비율로 크기 조정
+      if (width / height > 4 / 3) {
+        // 이미지가 이미 가로 4, 세로 3 비율보다 더 넓은 경우
+        height = (width * 3) / 4;
       } else {
-        if (height > maxHeight) {
-          width *= maxHeight / height;
-          height = maxHeight;
-        }
+        // 이미지가 가로 4, 세로 3 비율보다 더 좁거나 같은 경우
+        width = (height * 4) / 3;
+      }
+
+      // 최대 크기 제한 적용
+      if (width > maxWidth) {
+        height *= maxWidth / width;
+        width = maxWidth;
+      }
+
+      if (height > maxHeight) {
+        width *= maxHeight / height;
+        height = maxHeight;
       }
 
       canvas.width = width;

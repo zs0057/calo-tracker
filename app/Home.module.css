@@ -199,7 +199,12 @@
   color: #000;
   font-weight: 500;
 }
-
+.calorieInput {
+  width: 60px; /* input 필드의 넓이 조정 */
+  text-align: right; /* 텍스트 정렬을 오른쪽으로 */
+  display: inline-block; /* input을 inline-block으로 설정하여 한 줄에 표시 */
+  margin-right: 4px; /* input 필드와 kcal 사이의 간격 조정 */
+}
 .loadingOverlay {
   position: absolute;
   top: 0;
@@ -260,7 +265,7 @@
 }
 
 .resetButton {
-  background-color: #f1a3bf; /* Equivalent to bg-light-pink */
+  background-color: #888; /* Equivalent to bg-light-pink */
   color: white; /* text-white */
   padding: 0.5rem 1rem; /* py-2 px-4 */
   border-radius: 9999px; /* rounded-full */
